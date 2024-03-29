@@ -19,10 +19,11 @@
 
 #include <rapidjson/document.h> // dependency
 
+#include <cstdio>
 #include <optional>
 #include <string>
 
-namespace jsonHelper {
+namespace rapidjsonHelper {
 	namespace details {
 		inline std::optional<int> getInt(rapidjson::Value& value, const std::string& key) {
 			// checking member exists
@@ -69,22 +70,47 @@ namespace jsonHelper {
 				return std::nullopt;
 
 			// making optional with value
-			return std::optional<std::string>{member.GetString()};
+			return std::string{member.GetString()};
+		}
+
+		inline std::optional<double> getDouble(rapidjson::Value& value, const std::string& key) {
+			// checking member exists
+			if (!value.HasMember(key.c_str()))
+				return std::nullopt;
+
+			//getting member reference
+			rapidjson::Value& member = value[key.c_str()];
+
+			// checking for integer
+			if (member.IsDouble() == false)
+				return std::nullopt;
+
+			// making optional with value
+			return member.GetDouble();
+		}
+
+		template<class T>
+		inline std::optional<T> getValue(rapidjson::Value& value, const std::string& key) {
+			if constexpr (std::is_same_v<T, int>)
+				return getInt(value, key);
+			else if constexpr (std::is_same_v<T, int64_t>)
+				return getInt64(value, key);
+			else if constexpr (std::is_same_v<T, std::string>)
+				return getString(value, key);
+			else if constexpr (std::is_same_v<T, double>)
+				return getDouble(value, key);
+			else
+				return std::nullopt;
 		}
 	}
 
 	template<class T>
-	inline std::optional<T> getValue(rapidjson::Value& value, const std::string& key) {
-		if constexpr (std::is_same_v<T, int>)
-			return details::getInt(value, key);
-		else if constexpr (std::is_same_v<T, int64_t>)
-			return details::getInt64(value, key);
-		else if constexpr (std::is_same_v<T, std::string>)
-			return details::getString(value, key);
-		else
-			return std::nullopt;
+	inline T getValue(rapidjson::Value& value, const std::string& key) {
+		auto ret = details::getValue<T>(value, key);
+		if (!ret)
+			std::fprintf(stderr, "RAPIDJSON HELPER: FAILED TO OBTAIN VALUE BY KEY %s\n", key.c_str());
+		return ret.value_or(T{});
 	}
-
 
 	inline void insertValue(rapidjson::Value& value, const std::string& key, const int& insertValue, auto&& allocator) {
 		assert(value.IsObject());
