@@ -136,6 +136,22 @@ namespace rapidjsonHelper {
 			// making optional with value
 			return member.GetFloat();
 		}
+		
+		inline std::optional<bool> getBool(rapidjson::Value& value, const std::string& key) {
+			// checking member exists
+			if (!value.HasMember(key.c_str()))
+				return std::nullopt;
+
+			//getting member reference
+			rapidjson::Value& member = value[key.c_str()];
+
+			// checking for integer
+			if (member.IsBool() == false)
+				return std::nullopt;
+
+			// making optional with value
+			return member.GetBool();
+		}
 
 		template<class T>
 		inline std::optional<T> getValue(rapidjson::Value& value, const std::string& key) {
@@ -153,6 +169,8 @@ namespace rapidjsonHelper {
 				return getDouble(value, key);
 			else if constexpr (std::is_same_v<T, float>)
 				return getFloat(value, key);
+			else if constexpr (std::is_same_v<T, bool>)
+				return getBool(value, key);
 			else
 				return std::nullopt;
 		}
