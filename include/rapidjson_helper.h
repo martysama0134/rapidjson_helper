@@ -56,6 +56,38 @@ namespace rapidjsonHelper {
 			// making optional with value
 			return std::optional<int64_t>{member.GetInt64()};
 		}
+		
+		inline std::optional<unsigned int> getUint(rapidjson::Value& value, const std::string& key) {
+			// checking member exists
+			if (!value.HasMember(key.c_str()))
+				return std::nullopt;
+
+			//getting member reference
+			rapidjson::Value& member = value[key.c_str()];
+
+			// checking for integer
+			if (member.IsUint() == false)
+				return std::nullopt;
+
+			// making optional with value
+			return std::optional<unsigned int>{member.GetUint()};
+		}
+
+		inline std::optional<uint64_t> getUint64(rapidjson::Value& value, const std::string& key) {
+			// checking member exists
+			if (!value.HasMember(key.c_str()))
+				return std::nullopt;
+
+			//getting member reference
+			rapidjson::Value& member = value[key.c_str()];
+
+			// checking for integer
+			if (member.IsUint64() == false)
+				return std::nullopt;
+
+			// making optional with value
+			return std::optional<uint64_t>{member.GetUint64()};
+		}
 
 		inline std::optional<std::string> getString(rapidjson::Value& value, const std::string& key) {
 			// checking member exists
@@ -88,6 +120,22 @@ namespace rapidjsonHelper {
 			// making optional with value
 			return member.GetDouble();
 		}
+		
+		inline std::optional<float> getFloat(rapidjson::Value& value, const std::string& key) {
+			// checking member exists
+			if (!value.HasMember(key.c_str()))
+				return std::nullopt;
+
+			//getting member reference
+			rapidjson::Value& member = value[key.c_str()];
+
+			// checking for integer
+			if (member.IsFloat() == false)
+				return std::nullopt;
+
+			// making optional with value
+			return member.GetFloat();
+		}
 
 		template<class T>
 		inline std::optional<T> getValue(rapidjson::Value& value, const std::string& key) {
@@ -95,10 +143,16 @@ namespace rapidjsonHelper {
 				return getInt(value, key);
 			else if constexpr (std::is_same_v<T, int64_t>)
 				return getInt64(value, key);
+			else if constexpr (std::is_same_v<T, unsigned int>)
+				return getInt(value, key);
+			else if constexpr (std::is_same_v<T, uint64_t>)
+				return getInt64(value, key);
 			else if constexpr (std::is_same_v<T, std::string>)
 				return getString(value, key);
 			else if constexpr (std::is_same_v<T, double>)
 				return getDouble(value, key);
+			else if constexpr (std::is_same_v<T, float>)
+				return getFloat(value, key);
 			else
 				return std::nullopt;
 		}
