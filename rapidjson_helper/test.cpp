@@ -1,9 +1,5 @@
 #include <rapidjson_helper.h>
-#include <rapidjson/error/en.h>
 
-#include <cstdint>
-#include <fstream>
-#include <iostream>
 #include <vector>
 
 struct MyBigThiccData {
@@ -16,26 +12,9 @@ struct MyBigThiccData {
 
 bool TestLoadData() {
 	std::string filename = "test_load.json";
-
-	// 1. Open the JSON file
-	std::ifstream inFile(filename);
-	if (!inFile.is_open()) {
-		std::cerr << "Error opening file: " << filename << std::endl;
-		return 1;
-	}
-
-	// 2. Read the entire file content into a string
-	std::string jsonString;
-	inFile.seekg(0, std::ios::end);
-	int fileSize = (int)inFile.tellg();
-	inFile.seekg(0, std::ios::beg);
-	jsonString.resize(fileSize);
-	inFile.read(&jsonString[0], fileSize);
-	inFile.close();
-
-	// 3. Parse the JSON string
 	rapidjson::Document jsonDoc;
-	jsonDoc.Parse(jsonString.c_str());
+	if (!rapidjsonHelper::parseFromFile(jsonDoc, filename))
+		return false;
 
 	// checking for parser errors
 	if (jsonDoc.HasParseError()) {

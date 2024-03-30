@@ -23,6 +23,11 @@
 #include <optional>
 #include <string>
 
+#include <rapidjson/error/en.h>
+#include <cstdint>
+#include <fstream>
+#include <iostream>
+
 namespace rapidjsonHelper {
 	namespace details {
 		inline std::optional<int> getInt(rapidjson::Value& value, const std::string& key) {
@@ -254,6 +259,35 @@ namespace rapidjsonHelper {
 		rapidjson::Value newValue;
 		newValue.SetString(insertValue.c_str(), allocator);
 		value.AddMember(keyValue, newValue, allocator);
+	}
+
+	inline auto parseFromFile(rapidjson::Document & jsonDoc, const std::string_view& filename) {
+		// 1. Open the JSON file
+		std::ifstream inFile(filename.data());
+		if (!inFile.is_open()) {
+			std::cerr << "Error opening file: " << filename << std::endl;
+			return false;
+		}
+
+		// 2. Read the entire file content into a string
+		std::string jsonString;
+		inFile.seekg(0, std::ios::end);
+		int fileSize = (int)inFile.tellg();
+		inFile.seekg(0, std::ios::beg);
+		jsonString.resize(fileSize);
+		inFile.read(&jsonString[0], fileSize);
+		inFile.close();
+
+		// 3. Parse the JSON string
+		jsonDoc.Parse(jsonString.c_str());
+
+		// checking for parser errors
+		if (jsonDoc.HasParseError()) {
+			std::printf("JSON FILE LOAD ERROR %s: [%d] %s\n", filename.data(), (int)jsonDoc.GetParseError(), rapidjson::GetParseError_En(jsonDoc.GetParseError()));
+			return false;
+		}
+
+		return true;
 	}
 }
 
