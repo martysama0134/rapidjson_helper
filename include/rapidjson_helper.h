@@ -201,6 +201,51 @@ namespace rapidjsonHelper {
 		newValue.SetInt64(insertValue);
 		value.AddMember(keyValue, newValue, allocator);
 	}
+	
+	inline void insertValue(rapidjson::Value& value, const std::string& key, const unsigned int& insertValue, auto&& allocator) {
+		assert(value.IsObject());
+		rapidjson::Value keyValue;
+		keyValue.SetString(key.c_str(), allocator);
+		rapidjson::Value newValue;
+		newValue.SetUint(insertValue);
+		value.AddMember(keyValue, newValue, allocator);
+	}
+
+	inline void insertValue(rapidjson::Value& value, const std::string& key, const uint64_t& insertValue, auto&& allocator) {
+		assert(value.IsObject());
+		rapidjson::Value keyValue;
+		keyValue.SetString(key.c_str(), allocator);
+		rapidjson::Value newValue;
+		newValue.SetUint64(insertValue);
+		value.AddMember(keyValue, newValue, allocator);
+	}
+	
+	inline void insertValue(rapidjson::Value& value, const std::string& key, const double& insertValue, auto&& allocator) {
+		assert(value.IsObject());
+		rapidjson::Value keyValue;
+		keyValue.SetString(key.c_str(), allocator);
+		rapidjson::Value newValue;
+		newValue.SetDouble(insertValue);
+		value.AddMember(keyValue, newValue, allocator);
+	}
+	
+	inline void insertValue(rapidjson::Value& value, const std::string& key, const float& insertValue, auto&& allocator) {
+		assert(value.IsObject());
+		rapidjson::Value keyValue;
+		keyValue.SetString(key.c_str(), allocator);
+		rapidjson::Value newValue;
+		newValue.SetFloat(insertValue);
+		value.AddMember(keyValue, newValue, allocator);
+	}
+	
+	inline void insertValue(rapidjson::Value& value, const std::string& key, const bool& insertValue, auto&& allocator) {
+		assert(value.IsObject());
+		rapidjson::Value keyValue;
+		keyValue.SetString(key.c_str(), allocator);
+		rapidjson::Value newValue;
+		newValue.SetBool(insertValue);
+		value.AddMember(keyValue, newValue, allocator);
+	}
 
 	inline void insertValue(rapidjson::Value& value, const std::string& key, const std::string& insertValue, auto&& allocator) {
 		assert(value.IsObject());
