@@ -283,7 +283,20 @@ namespace rapidjsonHelper {
 
 		// checking for parser errors
 		if (jsonDoc.HasParseError()) {
-			std::printf("JSON FILE LOAD ERROR %s: [%d] %s\n", filename.data(), (int)jsonDoc.GetParseError(), rapidjson::GetParseError_En(jsonDoc.GetParseError()));
+			std::fprintf(stderr, "JSON FILE LOAD ERROR %s: [%d] %s\n", filename.data(), (int)jsonDoc.GetParseError(), rapidjson::GetParseError_En(jsonDoc.GetParseError()));
+			return false;
+		}
+
+		return true;
+	}
+
+	inline auto parseFromStream(rapidjson::Document & jsonDoc, const std::string_view& stream) {
+		// Parse the JSON string
+		jsonDoc.Parse(stream.data());
+
+		// Checking for parser errors
+		if (jsonDoc.HasParseError()) {
+			std::fprintf(stderr, "JSON DATA LOAD ERROR %s: [%d] %s\n", stream.data(), (int)jsonDoc.GetParseError(), rapidjson::GetParseError_En(jsonDoc.GetParseError()));
 			return false;
 		}
 
