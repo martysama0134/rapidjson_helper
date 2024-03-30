@@ -268,7 +268,7 @@ namespace rapidjsonHelper {
 
 	inline auto parseFromFile(rapidjson::Document & jsonDoc, const std::string_view& filename) {
 		// 1. Open the JSON file
-		std::ifstream inFile(filename.data());
+		std::ifstream inFile(filename.data(), std::ios::in | std::ios::binary);
 		if (!inFile.is_open()) {
 			std::cerr << "Error opening file: " << filename << std::endl;
 			return false;
@@ -304,7 +304,7 @@ namespace rapidjsonHelper {
 
 	inline bool writeToFile(rapidjson::Document& jsonDoc, const std::string_view& filename) {
 		// opening stream
-		std::ofstream stream(filename.data());
+		std::ofstream stream(filename.data(), std::ios::out | std::ios::binary);
 		if (!stream.is_open()) {
 			std::fprintf(stderr, "CANNOT SAVE THE FILE %s!", filename.data());
 			return false;
