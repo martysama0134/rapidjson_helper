@@ -23,6 +23,8 @@
 #include <optional>
 #include <string>
 
+#include <rapidjson/istreamwrapper.h>
+
 #include <rapidjson/error/en.h>
 #include <cstdint>
 #include <fstream>
@@ -270,18 +272,12 @@ namespace rapidjsonHelper {
 		}
 
 		// 2. Read the entire file content into a string
-		std::string jsonString;
-		inFile.seekg(0, std::ios::end);
-		int fileSize = (int)inFile.tellg();
-		inFile.seekg(0, std::ios::beg);
-		jsonString.resize(fileSize);
-		inFile.read(&jsonString[0], fileSize);
-		inFile.close();
+		rapidjson::IStreamWrapper isw(inFile);
 
 		// 3. Parse the JSON string
-		jsonDoc.Parse(jsonString.c_str());
+		jsonDoc.ParseStream(isw);
 
-		// checking for parser errors
+		// 4. Checking for parser errors
 		if (jsonDoc.HasParseError()) {
 			std::fprintf(stderr, "JSON FILE LOAD ERROR %s: [%d] %s\n", filename.data(), (int)jsonDoc.GetParseError(), rapidjson::GetParseError_En(jsonDoc.GetParseError()));
 			return false;
