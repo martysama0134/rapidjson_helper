@@ -18,17 +18,20 @@
 #pragma once
 
 #include <rapidjson/document.h> // dependency
+#include <rapidjson/error/en.h>
+#include <rapidjson/filereadstream.h>
+#include <rapidjson/filewritestream.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 #include <cstdio>
-#include <optional>
-#include <string>
-
-#include <rapidjson/istreamwrapper.h>
-
-#include <rapidjson/error/en.h>
 #include <cstdint>
 #include <fstream>
 #include <iostream>
+#include <optional>
+#include <string>
+#include <string_view>
 
 namespace rapidjsonHelper {
 	namespace details {
@@ -296,6 +299,28 @@ namespace rapidjsonHelper {
 			return false;
 		}
 
+		return true;
+	}
+
+	inline bool writeToFile(rapidjson::Document& jsonDoc, const std::string_view& filename) {
+		// making json string
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
+
+		rapidjson::Writer<rapidjson::StringBuffer> StringWriter(buffer);
+		jsonDoc.Accept(StringWriter);
+
+
+		// opening stream
+		std::ofstream stream(filename.data());
+		if (!stream.is_open()) {
+			std::fprintf(stderr, "CANNOT SAVE THE FILE %s!", filename.data());
+			return false;
+		}
+
+		// completing stream data
+		stream.write(buffer.GetString(), buffer.GetSize());
+		stream.close();
 		return true;
 	}
 }

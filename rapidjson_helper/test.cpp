@@ -52,8 +52,45 @@ bool TestLoadData() {
 	return true;
 }
 
+bool TestSaveData() {
+	std::string filename = "test_save.json";
+
+	// creating document
+	rapidjson::Document doc;
+	doc.SetArray();
+
+	std::vector<MyBigThiccData> dataList = {
+		{1, 169, 11, "Nymph", 11.11},
+		{2, 179, 22, "Lion", 22.11},
+		{3, 189, 33, "Holo", 33.11},
+	};
+
+	// reserving array size
+	doc.GetArray().Reserve((rapidjson::SizeType)dataList.size(), doc.GetAllocator());
+
+	// populating array
+	for (auto& elem : dataList)
+	{
+		rapidjson::Value member;
+		member.SetObject();
+
+		// encoding info
+		rapidjsonHelper::insertValue(member, "id", static_cast<int64_t>(elem.id), doc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "vnum", static_cast<int64_t>(elem.vnum), doc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "count", static_cast<int>(elem.count), doc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "name", std::string(elem.name), doc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "factor", static_cast<double>(elem.factor), doc.GetAllocator());
+
+		// pushing element inside the array
+		doc.PushBack(member, doc.GetAllocator());
+	}
+
+	return rapidjsonHelper::writeToFile(doc, filename);
+}
+
 int main()
 {
 	TestLoadData();
+	TestSaveData();
 	return 0;
 }
