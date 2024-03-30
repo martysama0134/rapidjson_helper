@@ -35,13 +35,13 @@
 
 namespace rapidjsonHelper {
 	namespace details {
-		inline std::optional<int> getInt(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<int> getInt(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsInt() == false)
@@ -51,13 +51,13 @@ namespace rapidjsonHelper {
 			return std::optional<int>{member.GetInt()};
 		}
 
-		inline std::optional<int64_t> getInt64(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<int64_t> getInt64(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsInt64() == false)
@@ -67,13 +67,13 @@ namespace rapidjsonHelper {
 			return std::optional<int64_t>{member.GetInt64()};
 		}
 		
-		inline std::optional<unsigned int> getUint(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<unsigned int> getUint(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsUint() == false)
@@ -83,13 +83,13 @@ namespace rapidjsonHelper {
 			return std::optional<unsigned int>{member.GetUint()};
 		}
 
-		inline std::optional<uint64_t> getUint64(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<uint64_t> getUint64(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsUint64() == false)
@@ -99,13 +99,13 @@ namespace rapidjsonHelper {
 			return std::optional<uint64_t>{member.GetUint64()};
 		}
 
-		inline std::optional<std::string> getString(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<std::string> getString(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsString() == false)
@@ -115,13 +115,13 @@ namespace rapidjsonHelper {
 			return std::string{member.GetString()};
 		}
 
-		inline std::optional<double> getDouble(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<double> getDouble(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsDouble() == false)
@@ -131,13 +131,13 @@ namespace rapidjsonHelper {
 			return member.GetDouble();
 		}
 		
-		inline std::optional<float> getFloat(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<float> getFloat(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsFloat() == false)
@@ -147,13 +147,13 @@ namespace rapidjsonHelper {
 			return member.GetFloat();
 		}
 		
-		inline std::optional<bool> getBool(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<bool> getBool(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
 				return std::nullopt;
 
 			//getting member reference
-			rapidjson::Value& member = value[key.c_str()];
+			const rapidjson::Value& member = value[key.c_str()];
 
 			// checking for integer
 			if (member.IsBool() == false)
@@ -164,7 +164,7 @@ namespace rapidjsonHelper {
 		}
 
 		template<class T>
-		inline std::optional<T> getValue(rapidjson::Value& value, const std::string& key) {
+		inline std::optional<T> getValue(const rapidjson::Value& value, const std::string& key) {
 			if constexpr (std::is_same_v<T, int>)
 				return getInt(value, key);
 			else if constexpr (std::is_same_v<T, int64_t>)
