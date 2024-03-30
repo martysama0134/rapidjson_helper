@@ -22,6 +22,7 @@
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/istreamwrapper.h>
+#include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 
@@ -302,7 +303,25 @@ namespace rapidjsonHelper {
 		return true;
 	}
 
-	inline bool writeToFile(rapidjson::Document& jsonDoc, const std::string_view& filename) {
+	inline std::string writeToStream(rapidjson::Document& jsonDoc, bool prettify = false) {
+		// making json string
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
+
+		if (prettify) {
+			rapidjson::PrettyWriter<rapidjson::StringBuffer> prettyWriter(buffer);
+			jsonDoc.Accept(prettyWriter);
+		}
+		else {
+			rapidjson::Writer<rapidjson::StringBuffer> stringWriter(buffer);
+			jsonDoc.Accept(stringWriter);
+		}
+
+		// completing stream data
+		return std::string(buffer.GetString(), buffer.GetSize());
+	}
+
+	inline bool writeToFile(rapidjson::Document& jsonDoc, const std::string_view& filename, bool prettify = false) {
 		// opening stream
 		std::ofstream stream(filename.data(), std::ios::out | std::ios::binary);
 		if (!stream.is_open()) {
@@ -311,28 +330,12 @@ namespace rapidjsonHelper {
 		}
 
 		// making json string
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Writer<rapidjson::StringBuffer> StringWriter(buffer);
-		jsonDoc.Accept(StringWriter);
+		 const auto & data = writeToStream(jsonDoc, prettify);
 
 		// completing stream data
-		stream.write(buffer.GetString(), buffer.GetSize());
+		stream.write(data.data(), data.size());
 		stream.close();
 		return true;
-	}
-
-	inline std::string writeToStream(rapidjson::Document& jsonDoc) {
-		// making json string
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Writer<rapidjson::StringBuffer> StringWriter(buffer);
-		jsonDoc.Accept(StringWriter);
-
-		// completing stream data
-		return std::string(buffer.GetString(), buffer.GetSize());
 	}
 }
 

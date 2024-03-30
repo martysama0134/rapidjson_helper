@@ -85,7 +85,7 @@ bool TestSaveData() {
 		jsonDoc.PushBack(member, jsonDoc.GetAllocator());
 	}
 
-	std::cout << rapidjsonHelper::writeToStream(jsonDoc) << std::endl;
+	std::cout << rapidjsonHelper::writeToStream(jsonDoc, true) << std::endl;
 	return rapidjsonHelper::writeToFile(jsonDoc, filename);
 }
 
