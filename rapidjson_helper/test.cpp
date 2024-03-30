@@ -56,8 +56,8 @@ bool TestSaveData() {
 	std::string filename = "test_save.json";
 
 	// creating document
-	rapidjson::Document doc;
-	doc.SetArray();
+	rapidjson::Document jsonDoc;
+	jsonDoc.SetArray();
 
 	std::vector<MyBigThiccData> dataList = {
 		{1, 169, 11, "Nymph", 11.11},
@@ -66,7 +66,7 @@ bool TestSaveData() {
 	};
 
 	// reserving array size
-	doc.GetArray().Reserve((rapidjson::SizeType)dataList.size(), doc.GetAllocator());
+	jsonDoc.GetArray().Reserve((rapidjson::SizeType)dataList.size(), jsonDoc.GetAllocator());
 
 	// populating array
 	for (auto& elem : dataList)
@@ -75,17 +75,18 @@ bool TestSaveData() {
 		member.SetObject();
 
 		// encoding info
-		rapidjsonHelper::insertValue(member, "id", static_cast<int64_t>(elem.id), doc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "vnum", static_cast<int64_t>(elem.vnum), doc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "count", static_cast<int>(elem.count), doc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "name", std::string(elem.name), doc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "factor", static_cast<double>(elem.factor), doc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "id", static_cast<int64_t>(elem.id), jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "vnum", static_cast<int64_t>(elem.vnum), jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "count", static_cast<int>(elem.count), jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "name", std::string(elem.name), jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "factor", static_cast<double>(elem.factor), jsonDoc.GetAllocator());
 
 		// pushing element inside the array
-		doc.PushBack(member, doc.GetAllocator());
+		jsonDoc.PushBack(member, jsonDoc.GetAllocator());
 	}
 
-	return rapidjsonHelper::writeToFile(doc, filename);
+	std::cout << rapidjsonHelper::writeToStream(jsonDoc) << std::endl;
+	return rapidjsonHelper::writeToFile(jsonDoc, filename);
 }
 
 int main()

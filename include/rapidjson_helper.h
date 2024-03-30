@@ -303,14 +303,6 @@ namespace rapidjsonHelper {
 	}
 
 	inline bool writeToFile(rapidjson::Document& jsonDoc, const std::string_view& filename) {
-		// making json string
-		rapidjson::StringBuffer buffer;
-		buffer.Clear();
-
-		rapidjson::Writer<rapidjson::StringBuffer> StringWriter(buffer);
-		jsonDoc.Accept(StringWriter);
-
-
 		// opening stream
 		std::ofstream stream(filename.data());
 		if (!stream.is_open()) {
@@ -318,10 +310,29 @@ namespace rapidjsonHelper {
 			return false;
 		}
 
+		// making json string
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
+
+		rapidjson::Writer<rapidjson::StringBuffer> StringWriter(buffer);
+		jsonDoc.Accept(StringWriter);
+
 		// completing stream data
 		stream.write(buffer.GetString(), buffer.GetSize());
 		stream.close();
 		return true;
+	}
+
+	inline std::string writeToStream(rapidjson::Document& jsonDoc) {
+		// making json string
+		rapidjson::StringBuffer buffer;
+		buffer.Clear();
+
+		rapidjson::Writer<rapidjson::StringBuffer> StringWriter(buffer);
+		jsonDoc.Accept(StringWriter);
+
+		// completing stream data
+		return std::string(buffer.GetString(), buffer.GetSize());
 	}
 }
 
