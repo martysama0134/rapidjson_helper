@@ -75,18 +75,18 @@ bool TestSaveData() {
 		member.SetObject();
 
 		// encoding info
-		rapidjsonHelper::insertValue(member, "id", static_cast<int64_t>(elem.id), jsonDoc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "vnum", static_cast<int64_t>(elem.vnum), jsonDoc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "count", static_cast<int>(elem.count), jsonDoc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "name", std::string(elem.name), jsonDoc.GetAllocator());
-		rapidjsonHelper::insertValue(member, "factor", static_cast<double>(elem.factor), jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "id", elem.id, jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "vnum", elem.vnum, jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "count", elem.count, jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "name", elem.name, jsonDoc.GetAllocator());
+		rapidjsonHelper::insertValue(member, "factor", elem.factor, jsonDoc.GetAllocator());
 
 		// pushing element inside the array
 		jsonDoc.PushBack(member, jsonDoc.GetAllocator());
 	}
 
-	std::cout << rapidjsonHelper::writeToStream(jsonDoc, true) << std::endl;
-	return rapidjsonHelper::writeToFile(jsonDoc, filename);
+	std::cout << rapidjsonHelper::writeToStream(jsonDoc) << std::endl;
+	return rapidjsonHelper::writeToFile(jsonDoc, filename, true);
 }
 
 int main()
