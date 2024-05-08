@@ -67,7 +67,7 @@ namespace rapidjsonHelper {
 			// making optional with value
 			return std::optional<int64_t>{member.GetInt64()};
 		}
-		
+
 		inline std::optional<unsigned int> getUint(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
@@ -131,7 +131,7 @@ namespace rapidjsonHelper {
 			// making optional with value
 			return member.GetDouble();
 		}
-		
+
 		inline std::optional<float> getFloat(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
@@ -147,7 +147,7 @@ namespace rapidjsonHelper {
 			// making optional with value
 			return member.GetFloat();
 		}
-		
+
 		inline std::optional<bool> getBool(const rapidjson::Value& value, const std::string& key) {
 			// checking member exists
 			if (!value.HasMember(key.c_str()))
@@ -171,9 +171,9 @@ namespace rapidjsonHelper {
 			else if constexpr (std::is_same_v<T, int64_t>)
 				return getInt64(value, key);
 			else if constexpr (std::is_same_v<T, unsigned int>)
-				return getInt(value, key);
+				return getUint(value, key);
 			else if constexpr (std::is_same_v<T, uint64_t>)
-				return getInt64(value, key);
+				return getUint64(value, key);
 			else if constexpr (std::is_same_v<T, std::string>)
 				return getString(value, key);
 			else if constexpr (std::is_same_v<T, double>)
@@ -212,7 +212,7 @@ namespace rapidjsonHelper {
 		newValue.SetInt64(insertValue);
 		value.AddMember(keyValue, newValue, allocator);
 	}
-	
+
 	inline void insertValue(rapidjson::Value& value, const std::string& key, const unsigned int& insertValue, auto&& allocator) {
 		assert(value.IsObject());
 		rapidjson::Value keyValue;
@@ -230,7 +230,7 @@ namespace rapidjsonHelper {
 		newValue.SetUint64(insertValue);
 		value.AddMember(keyValue, newValue, allocator);
 	}
-	
+
 	inline void insertValue(rapidjson::Value& value, const std::string& key, const double& insertValue, auto&& allocator) {
 		assert(value.IsObject());
 		rapidjson::Value keyValue;
@@ -239,7 +239,7 @@ namespace rapidjsonHelper {
 		newValue.SetDouble(insertValue);
 		value.AddMember(keyValue, newValue, allocator);
 	}
-	
+
 	inline void insertValue(rapidjson::Value& value, const std::string& key, const float& insertValue, auto&& allocator) {
 		assert(value.IsObject());
 		rapidjson::Value keyValue;
@@ -248,7 +248,7 @@ namespace rapidjsonHelper {
 		newValue.SetFloat(insertValue);
 		value.AddMember(keyValue, newValue, allocator);
 	}
-	
+
 	inline void insertValue(rapidjson::Value& value, const std::string& key, const bool& insertValue, auto&& allocator) {
 		assert(value.IsObject());
 		rapidjson::Value keyValue;
